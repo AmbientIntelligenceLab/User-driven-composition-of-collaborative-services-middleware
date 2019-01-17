@@ -1,6 +1,6 @@
 
-Blockly.PHP['weather'] = function(Block) {
+Blockly.Python['weather'] = function(Block) {
     var code = "parseJson()";
-    return [code, Blockly.PHP.ORDER_ATOMIC];
+    return [code, Blockly.Python.ORDER_ATOMIC];
     //return code;
   }
