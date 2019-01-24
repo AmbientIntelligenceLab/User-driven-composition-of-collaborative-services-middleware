@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,12 +29,13 @@
   <!-- added three buttons in the very first-->
   <p>
     <button onclick="showCode()">Show Python</button>
-    <!--not used right now 
 
-    <button onclick="runCode()">Run PHP</button>
+    <button onclick="runCode()" id="runcode">Run Python</button>
+    <!--not used right now
     <button onclick="showXml()">Generate XML tree</button>
-    
+
   -->
+  {% csrf_token %}
   </p>
 
     <!-- work space -->
@@ -89,22 +90,43 @@
 
 
   <script>
-    //initialize workspace 
-    //get the logic statements from blockly/media 
+    //initialize workspace
+    //get the logic statements from blockly/media
     var demoWorkspace = Blockly.inject('blocklyDiv',
         {media: 'blockly/media/',toolbox: document.getElementById('toolbox')});
-
-
     // Generate JavaScript code and display it.
     function showCode() {
       Blockly.Python.INFINITE_LOOP_TRAP = null;
-      //convert blockly logics into python code 
+      //convert blockly logics into python code
       var code = Blockly.Python.workspaceToCode(demoWorkspace);
       alert(code);
     }
+    //run code and give a post httprequest to the server
+    //then server will get the value and make decissions
 
-    
+    function runCode(){
+          Blockly.Python.INFINITE_LOOP_TRAP = null;
+          //convert blockly logics into python code
+          var code = Blockly.Python.workspaceToCode(demoWorkspace);
+          //var code = String(code);
+          //var fields = code.split(':');
+          //var logic_section = fields[0];
+          //var function_call = fields[1];
 
+          $.ajax({
+            type: 'POST',
+            url: "/getMotorStatus/",
+            headers:{
+              "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            data: {'code': code},
+
+            success: function(response) {
+                console.log(response.code);
+            }
+          });
+    }
 
 //weater block start
 Blockly.Blocks['weather'] = {
@@ -117,18 +139,16 @@ Blockly.Blocks['weather'] = {
       }
     }
 //weather block end
-
 //motor block start
     Blockly.Blocks['motor-on'] = {
       init: function() {
         this.appendDummyInput()
-        .appendField(new Blockly.FieldLabel('motor on'));//label 
+        .appendField(new Blockly.FieldLabel('motor on'));//label
         //this.setOutput(true, 'String');
         this.setPreviousStatement(true, 'Action');
         this.setColour(60);
       }
     }
-
     Blockly.Blocks['motor-off'] = {
       init: function() {
         this.appendDummyInput()
@@ -139,7 +159,6 @@ Blockly.Blocks['weather'] = {
       }
     }
 //motor block end
-
 //lower sensor block start
 Blockly.Blocks['l-sensor'] = {
       init: function() {
@@ -151,7 +170,6 @@ Blockly.Blocks['l-sensor'] = {
       }
     }
 //lower sensor block end
-
   </script>
 
 </body>
