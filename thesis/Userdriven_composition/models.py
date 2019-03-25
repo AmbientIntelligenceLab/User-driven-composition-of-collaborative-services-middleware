@@ -20,3 +20,13 @@ class LowerSensor(models.Model):
 
 	def __str__(self):
 		return self.name
+
+
+class Service_registry(models.Model):
+	name = models.CharField(max_length=50)
+	name_id = models.CharField(max_length=100)
+	api_link = models.CharField(max_length=200)
+	service_type = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.name
