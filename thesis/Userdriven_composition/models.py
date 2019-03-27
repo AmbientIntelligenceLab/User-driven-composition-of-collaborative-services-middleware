@@ -1,5 +1,12 @@
 from django.db import models
 from datetime import datetime
+from django.db.models import signals
+
+def service_added(sender,instance,created, **kwargs):
+	service = Service_registry.objects.last()
+	print(service)
+	print('{} {} '.format(service.id, service.name))
+
 
 # Create your models here.
 class Actuator(models.Model):
@@ -30,3 +37,7 @@ class Service_registry(models.Model):
 
 	def __str__(self):
 		return self.name
+
+
+
+signals.post_save.connect(receiver=service_added,sender=Service_registry)
