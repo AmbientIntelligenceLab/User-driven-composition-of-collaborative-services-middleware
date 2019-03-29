@@ -5,6 +5,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('actuators', views.ActuatorApi)
 router.register('lowersensors', views.LowerSensorApi)
+router.register('serviceregistry', views.ServiceRegistryApi)
 
 urlpatterns = [
     # url(r'^(?P<slug>[-\w\d]+),(?P<id>\d+)/$',views.notice_detail, name ='notice_detail')

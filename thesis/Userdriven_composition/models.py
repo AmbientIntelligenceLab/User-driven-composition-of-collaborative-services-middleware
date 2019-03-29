@@ -1,12 +1,36 @@
 from django.db import models
 from datetime import datetime
 from django.db.models import signals
+import requests
+from . import automatic_writter
+
 
 def service_added(sender,instance,created, **kwargs):
 	service = Service_registry.objects.last()
-	print(service)
-	print('{} {} '.format(service.id, service.name))
+	last_service_datas = requests.get("http://127.0.0.1:8000/api/serviceregistry/{}/".format(service.id)).json()
+	#used for data logging
+	print('new service added! watcher information! {}'.format(last_service_datas['name']))
+	last_service_id = last_service_datas['id']
+	last_service_name = last_service_datas['name']
+	last_service_name_id = last_service_datas['name_id']
+	last_service_api_link = last_service_datas['api_link']
+	last_service_service_type = last_service_datas['service_type']
+	#checking purpose
+	if last_service_service_type == 'sensor':
+		automatic_writter.sensor_function_writter(last_service_name_id,last_service_api_link)
+	elif last_service_service_type == 'actuator':
+		automatic_writter.actuator_function_writter(last_service_name_id,last_service_api_link)
 
+	#val(service.id,service.name,service.name_id,service.api_link,service.service_type)
+	#print('{} {}'.format(service.id, service.name))
+
+#for initializing 
+def val(id,name,name_id,api_link,service_type):
+	id = id
+	name = name
+	name_id = name_id
+	api_link = api_link
+	service_type = service_type
 
 # Create your models here.
 class Actuator(models.Model):
